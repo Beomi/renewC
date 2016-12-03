@@ -1,5 +1,6 @@
 # django
 from django.db import models
+from django.conf import settings
 
 # python
 from datetime import date
@@ -15,6 +16,7 @@ class TimeStampModel(models.Model):
 
 
 class UserInfo(TimeStampModel):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
     student_id = models.PositiveIntegerField(default=0)
     paid_until = models.DateField(default=date.today)
 
@@ -57,7 +59,7 @@ class PetitionProgress(TimeStampModel):
     content = models.TextField()
 
     def __str__(self):
-        return self.title
+        return self.petition.__str__()+ ': #{} '.format(self.pk) + self.title
 
 
 class PetitionComment(TimeStampModel):
@@ -66,9 +68,9 @@ class PetitionComment(TimeStampModel):
 
     def __str__(self):
         if len(self.comment) < 20:
-            return self.petition.title + self.comment
+            return self.petition.__str__() + '의 #{}번 덧글: '.format(self.pk) + self.comment
         else:
-            return self.petition.title + self.comment[:20]
+            return self.petition.__str__() + '의 #{}번 덧글: '.format(self.pk) + self.comment[:20]
 
 
 class Vote(TimeStampModel):
@@ -84,7 +86,7 @@ class VoteChoice(TimeStampModel):
     choice = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.vote.title + ':' + self.choice
+        return self.vote.__str__() + ':' + self.choice
 
 
 class VoteComment(TimeStampModel):
@@ -93,6 +95,6 @@ class VoteComment(TimeStampModel):
 
     def __str__(self):
         if len(self.comment) < 20:
-            return self.vote.title + self.comment
+            return self.vote.__str__() + '의 #{}번 덧글: '.format(self.pk) + self.comment
         else:
-            return self.vote.title + self.comment[:20]
+            return self.vote.__str__() + '의 #{}번 덧글: '.format(self.pk) + self.comment[:20]
