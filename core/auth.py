@@ -13,7 +13,7 @@ class UserBackend(object):
             except User.DoesNotExist:
                 # Create a new user. There's no need to set a password
                 # because only the password from settings.py is checked.
-                user = User(username=username, password=password)
+                user = User(username=username)
                 user.is_staff = False
                 user.is_superuser = False
                 user.save()
