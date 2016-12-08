@@ -17,14 +17,7 @@ class TimeStampModel(models.Model):
 
 class UserInfo(TimeStampModel):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
-    student_id = models.PositiveIntegerField(default=0)
     paid_until = models.DateField(default=date.today)
-
-    @property
-    def is_student(self):
-        if self.student_id != 0:
-            return True
-        return False
 
     @property
     def is_paid(self):
@@ -33,15 +26,11 @@ class UserInfo(TimeStampModel):
         return False
 
     def __str__(self):
-        if self.is_student:
-            student_status = '학생인증: O'
-        else:
-            student_status = '학생인증: X'
         if self.is_paid:
             paid = '학생회비: O'
         else:
             paid = '학생회비: X'
-        return str(self.student_id) + '/' + student_status + '/' + paid
+        return str(self.user.name) + '/' + paid
 
 
 class Petition(TimeStampModel):
