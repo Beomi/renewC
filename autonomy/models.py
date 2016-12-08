@@ -30,7 +30,7 @@ class UserInfo(TimeStampModel):
             paid = '학생회비: O'
         else:
             paid = '학생회비: X'
-        return str(self.user.name) + '/' + paid
+        return str(self.user.username) + '/' + paid
 
 
 class Petition(TimeStampModel):
