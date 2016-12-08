@@ -41,7 +41,7 @@ def setup():
     _setup_zsh()
     _make_virtualenv()
     _end_connection()
-    _ufw_allow()
+    #_ufw_allow()
 
 def deploy():
     _get_latest_source()
@@ -49,7 +49,7 @@ def deploy():
     _update_virtualenv()
     _update_static_files()
     _update_database()
-    _ufw_allow()
+    #_ufw_allow()
     _make_virtualhost()
     _grant_apache2()
     _restart_apache2()
