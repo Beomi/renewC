@@ -131,7 +131,7 @@ def _ufw_allow():
 
 def _make_virtualhost():
     if not exists('/etc/apache2/sites-available/{}.conf'.format(PROJECT_NAME)):
-        secret_key_filept = """'<VirtualHost *:80>
+        script = """'<VirtualHost *:80>
         ServerName {servername}
         Alias /{static_url} /home/{username}/{project_name}/{static_root}
         <Directory /home/{username}/{project_name}/{static_root}>
