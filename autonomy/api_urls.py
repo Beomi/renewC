@@ -1,9 +1,8 @@
 from django.conf.urls import url
 
-#from .api_views import student_verify
-
+from . import api_views as api
 
 urlpatterns = [
-#    url(r'^auth/$', student_verify, name='auth'),
+    url(r'^auth/$', api.user_info, name='user_info'),
 
 ]
