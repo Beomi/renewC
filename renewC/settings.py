@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     # apps
     'autonomy',
     'gdstorage',
+
+    # pip
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [

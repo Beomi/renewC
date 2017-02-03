@@ -5,11 +5,15 @@
     <title>Title</title>
 </head>
 <body>
+{% for p in petitions %}
 <h1>{{ p.title }}</h1>
 <div>{{ p.content }}</div>
 {% for file in p.petitionfile_set.all %}
 <p style="height: 50px; background-color: aquamarine; line-height: 50px; text-align: center"><a href="{{ file.url | safe }}">{{ file.name }}</a></p>
-<img src="{{ file.url | safe }}" width="100%" height="100%" />
+{% endfor %}
+{% for img in p.petitionimage_set.all %}
+    <img src="{{ img.url | safe }}" />
+{% endfor %}
 {% endfor %}
 </body>
 </html>

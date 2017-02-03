@@ -9,6 +9,10 @@ import time
 
 # pip
 from gdstorage.storage import GoogleDriveStorage
+from sorl.thumbnail import ImageField
+from sorl.thumbnail import get_thumbnail
+from django_resized import ResizedImageField
+
 
 gd_storage = GoogleDriveStorage()
 
@@ -30,6 +34,7 @@ class AttachmentModel(TimeStampModel):
 
     def get_google_url(self):
         url = self.file.url
+        print(url)
         pattern = re.compile(r'd\/(.+)\/')
         file_id = re.search(pattern, url).group(1)
         google_url = 'https://drive.google.com/uc?export=view&id={}'.format(file_id)
@@ -37,6 +42,7 @@ class AttachmentModel(TimeStampModel):
 
     def save(self, *args, **kwargs):
         if self.file:
+            print(self.file.name)
             self.url = self.get_google_url()
         super(AttachmentModel, self).save(*args, **kwargs)
 
@@ -46,6 +52,50 @@ class AttachmentModel(TimeStampModel):
     class Meta:
         abstract=True
 
+
+class ImageAttachmentModel(AttachmentModel):
+    file = ResizedImageField(
+        upload_to='%Y/%M/%d',
+        storage=gd_storage,
+        size=[500, 500],
+        quality= 99,
+    )
+
+    def save(self, *args, **kwargs):
+        if self.file:
+            self.url = self.get_google_url()
+        super(ImageAttachmentModel, self).save(*args, **kwargs)
+
+    class Meta:
+        abstract=True
+
+'''
+class ImageAttachmentModel(AttachmentModel):
+    file = models.ImageField(
+        upload_to='%Y/%M/%d',
+        storage=gd_storage,
+    )
+
+    def save(self, *args, **kwargs):
+        im = Image.open(self.file)
+        output = BytesIO()
+        # Resize/modify the image
+        im = im.resize((300, 300))
+
+        # after modifications, save it to the output
+        im.save(output, format='JPEG', quality=100)
+        output.seek(0)
+
+        # change the imagefield value to be the newley modifed image value
+        self.file = InMemoryUploadedFile(output, 'ImageField', "%s.jpg" % self.file.name.split('.')[0], 'image/jpeg',
+                                        sys.getsizeof(output), None)
+        if self.file:
+            self.url = self.get_google_url()
+        super(ImageAttachmentModel, self).save(*args, **kwargs)
+
+    class Meta:
+        abstract=True
+'''
 
 class UserInfo(TimeStampModel):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
@@ -75,6 +125,10 @@ class Petition(TimeStampModel):
 
 
 class PetitionFile(AttachmentModel):
+    petition = models.ForeignKey(Petition)
+
+
+class PetitionImage(ImageAttachmentModel):
     petition = models.ForeignKey(Petition)
 
 

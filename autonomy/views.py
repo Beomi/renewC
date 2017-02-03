@@ -5,5 +5,5 @@ from .models import Petition
 #    return render(request, 'index.html')
 
 def index(request):
-    p = Petition.objects.first()
-    return render(request, 'index.html', {'p': p})
+    p = Petition.objects.all()
+    return render(request, 'index.html', {'petitions': p})
