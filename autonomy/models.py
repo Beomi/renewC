@@ -69,6 +69,16 @@ class Vote(TimeStampModel):
     def __str__(self):
         return self.title
 
+    @property
+    def get_comments(self):
+        comments = self.objects.prefetch_related('votecomment_set')
+        return comments
+
+    @property
+    def get_choices(self):
+        choices = self.objects.prefetch_related('votechoice_set')
+        return choices
+
 
 class VoteChoice(TimeStampModel):
     vote = models.ForeignKey(Vote)
