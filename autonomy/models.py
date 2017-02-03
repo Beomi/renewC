@@ -4,12 +4,44 @@ from django.conf import settings
 
 # python
 from datetime import date
+import re
+import time
 
 # pip
+from gdstorage.storage import GoogleDriveStorage
+
+gd_storage = GoogleDriveStorage()
+
 
 class TimeStampModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract=True
+
+class AttachmentModel(TimeStampModel):
+    file = models.FileField(upload_to='%Y/%M/%d', storage=gd_storage)
+    url = models.CharField(max_length=200, blank=True)
+
+    @property
+    def name(self):
+        return self.file.name
+
+    def get_google_url(self):
+        url = self.file.url
+        pattern = re.compile(r'd\/(.+)\/')
+        file_id = re.search(pattern, url).group(1)
+        google_url = 'https://drive.google.com/uc?export=view&id={}'.format(file_id)
+        return google_url
+
+    def save(self, *args, **kwargs):
+        if self.file:
+            self.url = self.get_google_url()
+        super(AttachmentModel, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         abstract=True
@@ -40,6 +72,10 @@ class Petition(TimeStampModel):
 
     def __str__(self):
         return self.title
+
+
+class PetitionFile(AttachmentModel):
+    petition = models.ForeignKey(Petition)
 
 
 class PetitionProgress(TimeStampModel):
