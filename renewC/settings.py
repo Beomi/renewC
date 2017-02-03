@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     # apps
     'autonomy',
+    'gdstorage',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +131,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_deploy/')
+
+# Google Drive Storage
+GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE = os.path.join(BASE_DIR, 'google-drive-auth.json')

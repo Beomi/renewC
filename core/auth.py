@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
-
+# Core Views
 from .views import _check_if_student
 
 
@@ -20,7 +20,6 @@ class UserBackend(object):
                 user = UserModel(username=username)
                 user.is_staff = False
                 user.is_superuser = False
-                user.set_password(password)
                 user.save()
             return user
         else:
@@ -30,7 +29,6 @@ class UserBackend(object):
                     return user
             except:
                 return None
-
 
     def user_can_authenticate(self, user):
         """
